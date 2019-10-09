@@ -104,6 +104,7 @@ class Sketch {
       uniforms: {
         time: { type: "f", value: 0 },
         progress: { type: "f", value: 0 },
+        intensity: { type: "f", value: 0 },
         scaleX: { type: "f", value: 40 },
         scaleY: { type: "f", value: 40 },
         transition: { type: "f", value: 40 },
@@ -139,7 +140,6 @@ class Sketch {
     this.time += 0.05;
     this.material.uniforms.time.value = this.time;
     this.material.uniforms.progress.value = this.settings.progress;
-
 
 
     Object.keys(this.uniforms).forEach((item)=> {

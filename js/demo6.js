@@ -1,11 +1,12 @@
 // planetary
 let sketch = new Sketch({
 	uniforms: {
-		width: {value: 0.35, type:'f', min:0., max:1},
+		intensity: {value: 0.6, type:'f', min:0., max:3}
 	},
 	fragment: `
 		uniform float time;
 		uniform float progress;
+		uniform float intensity;
 		uniform float width;
 		uniform float scaleX;
 		uniform float scaleY;
@@ -25,7 +26,7 @@ let sketch = new Sketch({
 		const float PI = 3.1415;
 		const float angle1 = PI *0.25;
 		const float angle2 = -PI *0.75;
-		const float intensity = 0.6;
+		// const float intensity = 0.6;
 
 
 		void main()	{
