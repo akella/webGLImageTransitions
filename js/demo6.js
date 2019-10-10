@@ -47,6 +47,5 @@ let sketch = new Sketch({
 
 	`
 });
-sketch.play();
 
 

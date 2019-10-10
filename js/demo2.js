@@ -1,5 +1,6 @@
 
 let sketch = new Sketch({
+	time: 2,
 	uniforms: {
 		width: {value: 0.5, type:'f', min:0, max:10},
 	},
@@ -27,6 +28,5 @@ let sketch = new Sketch({
 		}
 	`
 });
-sketch.play();
 
 

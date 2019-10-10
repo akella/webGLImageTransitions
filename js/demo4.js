@@ -1,7 +1,8 @@
 
 let sketch = new Sketch({
+	time: 2,
 	uniforms: {
-		width: {value: 0.35, type:'f', min:0., max:1},
+		// width: {value: 0.35, type:'f', min:0., max:1},
 	},
 	fragment: `
 		uniform float time;
@@ -31,7 +32,6 @@ let sketch = new Sketch({
 		  vec2 newUV = (vUv - vec2(0.5))*resolution.zw + vec2(0.5);
 		  vec2 p = newUV;
 		  vec2 start = vec2(0.5,0.5);
-		  vec2 aspect = resolution.wz;
 
 
 
@@ -49,6 +49,5 @@ let sketch = new Sketch({
 
 	`
 });
-sketch.play();
 
 

@@ -11,8 +11,13 @@ class Sketch {
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(this.width, this.height);
     this.renderer.setClearColor(0xeeeeee, 1);
+    this.duration = opts.time || 1;
+
+    this.clicker = document.querySelector('.content');
+
 
     this.container = document.getElementById("slider");
+    this.images = JSON.parse(this.container.getAttribute('data-images'));
     this.width = this.container.offsetWidth;
     this.height = this.container.offsetHeight;
     this.container.appendChild(this.renderer.domElement);
@@ -27,15 +32,44 @@ class Sketch {
     this.camera.position.set(0, 0, 2);
     // this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.time = 0;
+    this.current = 0;
+    this.textures = [];
 
     this.paused = true;
-    this.setupResize();
-    this.settings();
-    this.addObjects();
-    this.resize();
+    this.initiate(()=>{
+      console.log(this.textures);
+      this.setupResize();
+      this.settings();
+      this.addObjects();
+      this.resize();
+      this.clickEvent();
+      this.play();
+    })
     
+
+
   }
 
+  initiate(cb){
+    const promises = [];
+    let that = this;
+    this.images.forEach((url,i)=>{
+      let promise = new Promise(resolve => {
+        that.textures[i] = new THREE.TextureLoader().load( url, resolve );
+      });
+      promises.push(promise);
+    })
+
+    Promise.all(promises).then(() => {
+      cb();
+    });
+  }
+
+  clickEvent(){
+    this.clicker.addEventListener('click',()=>{
+      this.next();
+    })
+  }
   settings() {
     let that = this;
     this.gui = new dat.GUI();
@@ -60,7 +94,7 @@ class Sketch {
     
 
     // image cover
-    this.imageAspect = 1;
+    this.imageAspect = this.textures[0].image.height/this.textures[0].image.width;
     let a1; let a2;
     if(this.height/this.width>this.imageAspect) {
       a1 = (this.width/this.height) * this.imageAspect ;
@@ -111,9 +145,9 @@ class Sketch {
         swipe: { type: "f", value: 0 },
         width: { type: "f", value: 0 },
         radius: { type: "f", value: 0 },
-        texture1: { type: "f", value: new THREE.TextureLoader().load('img/1.jpg') },
-        texture2: { type: "f", value: new THREE.TextureLoader().load('img/2.jpg') },
-        displacement: { type: "f", value: new THREE.TextureLoader().load('img/disp3.jpg') },
+        texture1: { type: "f", value: this.textures[0] },
+        texture2: { type: "f", value: this.textures[1] },
+        displacement: { type: "f", value: new THREE.TextureLoader().load('img/disp1.jpg') },
         resolution: { type: "v4", value: new THREE.Vector4() },
       },
       vertexShader: this.vertex,
@@ -135,11 +169,25 @@ class Sketch {
     this.render();
   }
 
+  next(){
+    let len = this.textures.length;
+    let nextTexture =this.textures[(this.current +1)%len];
+    this.material.uniforms.texture2.value = nextTexture;
+    let tl = new TimelineMax();
+    tl.to(this.material.uniforms.progress,this.duration,{
+      value:1,
+      ease: Power2.easeInOut,
+      onComplete:()=>{
+        this.current = (this.current +1)%len;
+        this.material.uniforms.texture1.value = nextTexture;
+        this.material.uniforms.progress.value = 0;
+    }})
+  }
   render() {
     if (this.paused) return;
     this.time += 0.05;
     this.material.uniforms.time.value = this.time;
-    this.material.uniforms.progress.value = this.settings.progress;
+    // this.material.uniforms.progress.value = this.settings.progress;
 
 
     Object.keys(this.uniforms).forEach((item)=> {

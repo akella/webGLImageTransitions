@@ -1,7 +1,7 @@
 
 let sketch = new Sketch({
 	uniforms: {
-		width: {value: 0.35, type:'f', min:0., max:1},
+		// width: {value: 0.35, type:'f', min:0., max:1},
 	},
 	fragment: `
 		uniform float time;
@@ -36,6 +36,5 @@ let sketch = new Sketch({
 
 	`
 });
-sketch.play();
 
 
