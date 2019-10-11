@@ -174,18 +174,19 @@ let sketch = new Sketch({
 
 			float realnoise = 0.5*(cnoise(vec4(newUV.x*scaleX  + 0.*time/3., newUV.y*scaleY,0.*time/3.,0.)) +1.);
 			// float realnoise = d.r;
-			float noise = realnoise + (1. + width)*newUV.x - width;
+			// float noise = realnoise + (1. + width)*newUV.x - width;
 
 			
 
 			float maskvalue = newUV.x + (1.+width)*progress - width;
-			maskvalue = smoothstep(1.-width,1.,maskvalue);
+			maskvalue = smoothstep(1.-2.*width,1.,maskvalue);
 
 
 			float mask = maskvalue + realnoise*maskvalue;
 			float final = smoothstep(0.99,1.,mask);
 
 			gl_FragColor = mix(color1,color2,final);
+			// gl_FragColor =vec4(final);
 		}
 	`
 });
