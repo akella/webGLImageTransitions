@@ -11,7 +11,7 @@ class Sketch {
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(this.width, this.height);
     this.renderer.setClearColor(0xeeeeee, 1);
-    this.duration = opts.time || 1;
+    this.duration = opts.duration || 1;
     this.debug = opts.debug || false
 
     this.clicker = document.querySelector('.content');
@@ -171,6 +171,8 @@ class Sketch {
   }
 
   next(){
+    if(this.isRunning) return;
+    this.isRunning = true;
     let len = this.textures.length;
     let nextTexture =this.textures[(this.current +1)%len];
     this.material.uniforms.texture2.value = nextTexture;
@@ -182,13 +184,14 @@ class Sketch {
         this.current = (this.current +1)%len;
         this.material.uniforms.texture1.value = nextTexture;
         this.material.uniforms.progress.value = 0;
+        this.isRunning = false;
     }})
   }
   render() {
     if (this.paused) return;
     this.time += 0.05;
     this.material.uniforms.time.value = this.time;
-    // this.material.uniforms.progress.value = this.settings.progress;
+    this.material.uniforms.progress.value = this.settings.progress;
 
 
     Object.keys(this.uniforms).forEach((item)=> {

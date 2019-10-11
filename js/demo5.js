@@ -19,7 +19,6 @@ let sketch = new Sketch({
 		uniform vec4 resolution;
 		varying vec2 vUv;
 
-
 		void main()	{
 		  vec2 newUV = (vUv - vec2(0.5))*resolution.zw + vec2(0.5);
 
