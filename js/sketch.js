@@ -12,6 +12,7 @@ class Sketch {
     this.renderer.setSize(this.width, this.height);
     this.renderer.setClearColor(0xeeeeee, 1);
     this.duration = opts.time || 1;
+    this.debug = opts.debug || false
 
     this.clicker = document.querySelector('.content');
 
@@ -72,13 +73,13 @@ class Sketch {
   }
   settings() {
     let that = this;
-    this.gui = new dat.GUI();
+    if(this.debug) this.gui = new dat.GUI();
     this.settings = {progress:0.5};
-    this.gui.add(this.settings, "progress", 0, 1, 0.01);
+    if(this.debug) this.gui.add(this.settings, "progress", 0, 1, 0.01);
 
     Object.keys(this.uniforms).forEach((item)=> {
       this.settings[item] = this.uniforms[item].value;
-      this.gui.add(this.settings, item, this.uniforms[item].min, this.uniforms[item].max, 0.01);
+      if(this.debug) this.gui.add(this.settings, item, this.uniforms[item].min, this.uniforms[item].max, 0.01);
     })
   }
 

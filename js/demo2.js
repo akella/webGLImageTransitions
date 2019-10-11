@@ -1,6 +1,7 @@
 
 let sketch = new Sketch({
-	time: 2,
+	duration: 2,
+	debug: true,
 	uniforms: {
 		width: {value: 0.5, type:'f', min:0, max:10},
 	},
