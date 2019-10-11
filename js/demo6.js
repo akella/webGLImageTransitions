@@ -27,7 +27,6 @@ let sketch = new Sketch({
 		const float PI = 3.1415;
 		const float angle1 = PI *0.25;
 		const float angle2 = -PI *0.75;
-		// const float intensity = 0.6;
 
 
 		void main()	{
@@ -37,10 +36,10 @@ let sketch = new Sketch({
 			vec2 dispVec = vec2(disp.r, disp.g);
 
 			vec2 distortedPosition1 = newUV + getRotM(angle1) * dispVec * intensity * progress;
-			vec4 t1 = texture2D(texture1, (distortedPosition1 * 1.) - 0.*vec2(0.5));
+			vec4 t1 = texture2D(texture1, distortedPosition1);
 
 			vec2 distortedPosition2 = newUV + getRotM(angle2) * dispVec * intensity * (1.0 - progress);
-			vec4 t2 = texture2D(texture2, (distortedPosition2 * 1.) - 0.*vec2(0.5));
+			vec4 t2 = texture2D(texture2, distortedPosition2);
 
 			gl_FragColor = mix(t1, t2, progress);
 

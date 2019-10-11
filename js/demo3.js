@@ -23,13 +23,9 @@ let sketch = new Sketch({
 		varying vec2 vUv;
 		varying vec4 vPosition;
 
-
-
-
 		float parabola( float x, float k ) {
 		  return pow( 4. * x * ( 1. - x ), k );
 		}
-
 
 		void main()	{
 		  vec2 newUV = (vUv - vec2(0.5))*resolution.zw + vec2(0.5);
