@@ -191,7 +191,7 @@ class Sketch {
     if (this.paused) return;
     this.time += 0.05;
     this.material.uniforms.time.value = this.time;
-    this.material.uniforms.progress.value = this.settings.progress;
+    // this.material.uniforms.progress.value = this.settings.progress;
 
 
     Object.keys(this.uniforms).forEach((item)=> {
