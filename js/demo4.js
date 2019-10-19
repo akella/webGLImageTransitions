@@ -1,6 +1,6 @@
 
 let sketch = new Sketch({
-	duration: 3,
+	duration: 1.5,
 	debug: true,
 	uniforms: {
 		// width: {value: 0.35, type:'f', min:0., max:1},
@@ -25,16 +25,12 @@ let sketch = new Sketch({
 			vec2 m = mod(v,2.);
 			return mix(m,2.0 - m, step(1.0 ,m));
 		}
-		float parabola( float x, float k ) {
-		  return pow( 4. * x * ( 1. - x ), k );
-		}
 
 		void main()	{
 		  vec2 newUV = (vUv - vec2(0.5))*resolution.zw + vec2(0.5);
-
-		  float dt = parabola(progress, 1.);
 		  vec4 noise = texture2D(displacement, mirrored(newUV+time*0.04));
-		  float prog = progress + noise.g * 0.06;
+		  // float prog = 0.6*progress + 0.2 + noise.g * 0.06;
+		  float prog = progress*0.7 + 0.05 + noise.g * 0.06;
 		  float intpl = pow(abs(smoothstep(0., 1., (prog*2. - vUv.x + 0.5))), 10.);
 		  
 		  vec4 t1 = texture2D( texture1, (newUV - 0.5) * (1.0 - intpl) + 0.5 ) ;
