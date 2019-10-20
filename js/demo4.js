@@ -2,6 +2,7 @@
 let sketch = new Sketch({
 	duration: 1.5,
 	debug: true,
+	easing: 'easeOut',
 	uniforms: {
 		// width: {value: 0.35, type:'f', min:0., max:1},
 	},

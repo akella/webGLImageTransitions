@@ -1,7 +1,8 @@
 
 let sketch = new Sketch({
-	duration: 2,
+	duration: 1.5,
 	debug: true,
+	easing: 'easeOut',
 	uniforms: {
 		radius: {value: 0.9, type:'f', min:0.1, max:2},
 		width: {value: 0.35, type:'f', min:0., max:1},
@@ -36,7 +37,7 @@ let sketch = new Sketch({
 		  vec2 uv = newUV;
 		  float dt = parabola(progress, 1.);
 		  vec4 noise = texture2D(displacement, fract(vUv+time*0.04));
-		  float prog = progress + noise.g * 0.04;
+		  float prog = progress*0.6 + noise.g * 0.04;
 		  float circ = 1. - smoothstep(-width, 0.0, radius * distance(start*aspect, uv*aspect) - prog*(1.+width));
 		  float intpl = pow(abs(circ), 1.);
 		  vec4 t1 = texture2D( texture1, (uv - 0.5) * (1.0 - intpl) + 0.5 ) ;
