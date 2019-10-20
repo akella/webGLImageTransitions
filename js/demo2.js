@@ -1,7 +1,8 @@
 
 let sketch = new Sketch({
-	duration: 2,
+	duration: 1.5,
 	debug: true,
+	easing: 'easeOut',
 	uniforms: {
 		width: {value: 0.5, type:'f', min:0, max:10},
 	},
