@@ -1,17 +1,20 @@
 
 let sketch = new Sketch({
-	duration: 3,
+	duration: 1.5,
 	debug: true,
+	easing: 'easeOut',
 	uniforms: {
 		width: {value: 0.5, type:'f', min:0, max:10},
 		scaleX: {value: 40, type:'f', min:0.1, max:60},
 		scaleY: {value: 40, type:'f', min:0.1, max:60},
+		border: {value: 1, type:'f', min:0., max:1},
 	},
 	fragment: `
 		uniform float time;
 		uniform float progress;
 		uniform float width;
 		uniform float scaleX;
+		uniform float border;
 		uniform float scaleY;
 		uniform sampler2D texture1;
 		uniform sampler2D texture2;
@@ -166,28 +169,34 @@ let sketch = new Sketch({
 		  return min2 + (value - min1) * (max2 - min2) / (max1 - min1);
 		}
 
+		float parabola( float x, float k ) {
+		  return pow( 4. * x * ( 1. - x ), k );
+		}
+
 
 		void main()	{
+			float dt = parabola(progress,1.);
 			vec2 newUV = (vUv - vec2(0.5))*resolution.zw + vec2(0.5);
 			vec4 color1 = texture2D(texture1,newUV);
 			vec4 color2 = texture2D(texture2,newUV);
 			vec4 d = texture2D(displacement,vec2(newUV.x*scaleX,newUV.y*scaleY));
 
 			float realnoise = 0.5*(cnoise(vec4(newUV.x*scaleX  + 0.*time/3., newUV.y*scaleY,0.*time/3.,0.)) +1.);
-			// float realnoise = d.r;
-			// float noise = realnoise + (1. + width)*newUV.x - width;
 
-			
+			float w = width*dt;
 
-			float maskvalue = newUV.x + (1.+width)*progress - width;
-			maskvalue = smoothstep(1.-2.*width,1.,maskvalue);
+			float maskvalue = smoothstep(1. - w,1.,vUv.x + mix(-w/2., 1. - w/2., progress));
+			float maskvalue0 = smoothstep(1.,1.,vUv.x + progress);
 
 
-			float mask = maskvalue + realnoise*maskvalue;
-			float final = smoothstep(0.99,1.,mask);
+
+			float mask = maskvalue + maskvalue*realnoise;
+			// float mask = maskvalue;
+
+			float final = smoothstep(border,border+0.01,mask);
 
 			gl_FragColor = mix(color1,color2,final);
-			// gl_FragColor =vec4(final);
+			// gl_FragColor =vec4(maskvalue0,final,0.,1.);
 		}
 	`
 });
