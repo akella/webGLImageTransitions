@@ -13,6 +13,7 @@ class Sketch {
     this.renderer.setClearColor(0xeeeeee, 1);
     this.duration = opts.duration || 1;
     this.debug = opts.debug || false
+    this.easing = opts.easing || 'easeInOut'
 
     this.clicker = document.querySelector('.content');
 
@@ -139,6 +140,7 @@ class Sketch {
       uniforms: {
         time: { type: "f", value: 0 },
         progress: { type: "f", value: 0 },
+        border: { type: "f", value: 0 },
         intensity: { type: "f", value: 0 },
         scaleX: { type: "f", value: 40 },
         scaleY: { type: "f", value: 40 },
@@ -179,8 +181,9 @@ class Sketch {
     let tl = new TimelineMax();
     tl.to(this.material.uniforms.progress,this.duration,{
       value:1,
-      ease: Power2.easeInOut,
+      ease: Power2[this.easing],
       onComplete:()=>{
+        console.log('FINISH');
         this.current = (this.current +1)%len;
         this.material.uniforms.texture1.value = nextTexture;
         this.material.uniforms.progress.value = 0;
