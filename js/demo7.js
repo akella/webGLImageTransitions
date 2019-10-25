@@ -34,8 +34,6 @@ let sketch = new Sketch({
 
 			vec2 uvDivided = fract(newUV*vec2(intensity,1.));
 
-			vec4 disp = texture2D(displacement, newUV);
-			vec2 dispVec = vec2(disp.r, disp.g);
 
 			vec2 uvDisplaced1 = newUV + rotate(3.1415926/4.)*uvDivided*progress*0.1;
 			vec2 uvDisplaced2 = newUV + rotate(3.1415926/4.)*uvDivided*(1. - progress)*0.1;

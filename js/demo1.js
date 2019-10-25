@@ -7,14 +7,14 @@ let sketch = new Sketch({
 		width: {value: 0.5, type:'f', min:0, max:10},
 		scaleX: {value: 40, type:'f', min:0.1, max:60},
 		scaleY: {value: 40, type:'f', min:0.1, max:60},
-		border: {value: 1, type:'f', min:0., max:1},
+		// border: {value: 1, type:'f', min:0., max:1},
 	},
 	fragment: `
 		uniform float time;
 		uniform float progress;
 		uniform float width;
 		uniform float scaleX;
-		uniform float border;
+		// uniform float border;
 		uniform float scaleY;
 		uniform sampler2D texture1;
 		uniform sampler2D texture2;
@@ -32,6 +32,7 @@ let sketch = new Sketch({
 		vec4 fade(vec4 t) {return t*t*t*(t*(t*6.0-15.0)+10.0);}
 
 		float cnoise(vec4 P){
+		  ;
 		  vec4 Pi0 = floor(P); // Integer part for indexing
 		  vec4 Pi1 = Pi0 + 1.0; // Integer part + 1
 		  Pi0 = mod(Pi0, 289.0);
@@ -176,6 +177,7 @@ let sketch = new Sketch({
 
 		void main()	{
 			float dt = parabola(progress,1.);
+			float border = 1.;
 			vec2 newUV = (vUv - vec2(0.5))*resolution.zw + vec2(0.5);
 			vec4 color1 = texture2D(texture1,newUV);
 			vec4 color2 = texture2D(texture2,newUV);

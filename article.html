@@ -1,0 +1,99 @@
+<!-- Pre-load large images of demo -->
+<div style="overflow:hidden; width:0px; height: 0px; pointer-events:none;">
+  <img src="http://tympanus.net/Development/NAME/img/something.jpg" style="width: 0; height: 0; opacity: 0;"/>
+</div>
+
+After introductory paragraph: 
+
+<div class="ct-featured-img-rss"><a href="http://tympanus.net/Development/NAME/"><!-- Featured Image for RSS Feed --></a></div>
+
+<strong>The demo is kindly sponsored by <a href="" rel="nofollow"></a></strong>. <em>If you would like to sponsor one of our demos, find out more <a href="https://tympanus.net/codrops/advertise/#advertise_demo">here</a>.</em>
+
+
+<!-- ===================================== -->
+<!-- For contributors writing the article: -->
+
+<p>Everybody loves images. They are bright, colorful, they might be dog, cat, or a person. Even text sometimes strives to be an image.</p>
+<pre>
+     |\_/|                  
+     | @ @   Woof! 
+     |   <>              _  
+     |  _/\------____ ((| |))
+     |               `--' |   
+ ____|_       ___|   |___.' 
+/_/_____/____/_______|
+</pre>
+<p>But once you have more than one image, you can't help making a transition between them. Or is it just me? 🤔 </p>
+<p>Jokes aside, image transitions are all over the web. They can be animated with CSS, SVG, WebGL. But of course, the most efficient way to work with graphics in the browser – is using Graphics Processor, or GPU. And the the best way to do this is WebGL, with shaders written in GLSL. </p>
+
+<h2>Set up</h2>
+<p>I will be using THREE.js framework for my transitions. It doesnt really matter what library to use, it could have been amazing Pixi.js, or simple (but not so straightforward) native WebGL. I've used native WebGL in my <a href='https://tympanus.net/codrops/2019/02/20/how-to-create-a-fake-3d-image-effect-with-webgl/'>previous tutorial</a>, so this time i will try THREE.js. It also seems most beginner friendly to me. So dont blame me for overhead size.</p>
+<p>Three.js uses concepts of Camera, Scene and Objects. We will create a simple Plane object, add it to Scene and put it in front of Camera, so that it is the only thing that you can see. There is a template for that kind of object <a href='https://threejs.org/docs/#api/en/geometries/PlaneBufferGeometry'>PlaneBufferGeometry</a>:</p>
+<video src="img/1.mp4" muted loop autoplay width="600"></video>
+<p>To cover the whole screen with a plane you need a little bit of geometry. Camera has a fov(field of view), and plane has a size. So with some calculations you can get it to fill your whole screen: </p>
+<pre class="brush:js">
+	camera.fov = 2*(180/Math.PI)*Math.atan(PlaneSize/(2*CameraDistance));
+</pre>
+<p>Looks complicated, but its just getting the angle(fov), knowing all the distances here:</p>
+<img src="img/g.png" alt="">
+<p>That is actually the end of 3D part, everything else will be happening in 2D.</p>
+
+<h2>GLSL</h2>
+<p>In case you are not yet familiar with this language i highly advise you to check out wonderful <a href="https://thebookofshaders.com/">Book Of Shaders</a>.</p>
+<p>So, we have a plane and we have a fragment shader attached to it, that calculates each pixels color.</p> 
+<p>How do we make a transition? The simplest one done with shader looks like this:</p>
+<pre class="brush:glsl">
+void main() {
+  vec4 image1 = texture2D(texture1,uv);
+  vec4 image2 = texture2D(texture2,uv);
+  gl_FragColor = mix(image1, image2, progress);
+}</pre>
+<p>Where <code>progress</code>, is some number between 0 and 1, indicating progress of animation.</p>
+<p>With that kind code you will get the simplest fade transition between images. But that's not that cool, right?</p>
+<h2>Cool transition</h2>
+<p>Usually all transitions are based on changing so called UVs, or the way texture is wrapped on plane. So for instance multiplying UV:  scales the image. Adding some number: just shifts image on a plane.</p>
+<p>UVs are nothing magical, think of it as a coordinate system for pixels on a plane:</p>
+<img src="img/uv.jpg" alt="" width="600">
+<p>Let's start with a basic code:</p>
+<pre class="brush:glsl">
+gl_FragColor = texture2D(texture,uv);
+</pre>
+<img src="img/0.jpg" alt="" width="600">
+<p>Which just shows an image on a screen. Now what if we change that a bit:</p>
+<pre class="brush:glsl">
+gl_FragColor = texture2D(texture,fract(uv + uv));
+</pre>
+<p>By taking fractional part, we make sure, all the values stay within 0-1 range. And if UV was from 0 to 1, doubled it is from 0 to 2, so we should see fractional part chaning from 0 to 1, and from 0 to 1 again!</p>
+<img src="img/4.jpg" alt="" width="600">
+<p>And thats what you get, repeated image. Now lets try something different, substracting UV and using progress for animation:</p>
+<pre class="brush:glsl">
+gl_FragColor = texture2D(texture, uv - uv * vec2(1.,0) * progress * 0.5);
+</pre>
+<p>First, we make sure we are only chaning one axis of UV, by multplying it with vec2(1.,0). So when progress is 0, it should be default image, let's see:</p>
+<video src="img/v.mp4" muted loop autoplay width="600"></video>
+<p>So now we can stretch the image!</p>
+<p>Now let's combine those two effects into one.</p>
+<pre class="brush:glsl">
+gl_FragColor = texture2D(uTextureOne, uv - fract(uv * vec2(5.,0.)) * progress * 0.1 );
+</pre>
+<p>So basically, we do stretching repeated 5 times now. And we could use any number instead of 5.</p>
+<video src="img/5.mp4" muted loop autoplay width="600"></video>
+<p>Much better! Now if we add another image, we could get one of my demos!</p>
+<video src="img/6.mp4" muted loop autoplay width="600"></video>
+<p>Cool isnt it? Just two simple arithmetic operations, and you have a cool transition effect.</p>
+<p>That's just one way of changing UVs, check out all the other demos, and try to guess whats the math behind them! And try to come up with your own unique animation, share it with me! And have a nice day =).</p>
+
+
+
+-----------------------------------------------------------------------------
+
+
+
+
+<!-- Can be added in the end of the article -->
+<h2>References and Credits</h2>
+<ul>
+  <li><a href='https://threejs.org/'>three.js</a></li>
+  <li><a href='https://gl-transitions.com/'>GL Transitions</a></li>
+  <li><a href='https://unsplash.com/photos/JHypHcOObf4/share'>Photo by Francesco Ungaro</a></li>
+</ul>
