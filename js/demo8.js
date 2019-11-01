@@ -55,20 +55,12 @@ let sketch = new Sketch({
 
 			vec2 newUV = (vUv - vec2(0.5))*resolution.zw + vec2(0.5);
 			
-			
 			float hn = hnoise(newUV.xy * resolution.xy / 100.0);
 
-			vec2 d = normalize(0.5 - newUV.xy);
+			vec2 d = vec2(0.,normalize(vec2(0.5,0.5) - newUV.xy).y);
 
 			vec2 uv1 = newUV + d * progress / 5.0 * (1.0 + hn / 2.0);
 			vec2 uv2 = newUV - d * (1.0 - progress) / 5.0 * (1.0 + hn / 2.0);
-
-
-			// vec2 uvDivided = fract(newUV*vec2(intensity,1.));
-
-
-			// vec2 uvDisplaced1 = newUV + rotate(3.1415926/4.)*uvDivided*progress*0.1;
-			// vec2 uvDisplaced2 = newUV + rotate(3.1415926/4.)*uvDivided*(1. - progress)*0.1;
 
 			vec4 t1 = texture2D(texture1,uv1);
 			vec4 t2 = texture2D(texture2,uv2);

@@ -110,19 +110,12 @@ class Sketch {
     this.material.uniforms.resolution.value.z = a1;
     this.material.uniforms.resolution.value.w = a2;
 
-
-    // optional - cover with quad
     const dist  = this.camera.position.z;
     const height = 1;
     this.camera.fov = 2*(180/Math.PI)*Math.atan(height/(2*dist));
 
-    // if(w/h>1) {
-    if(this.width/this.height>1){
-      this.plane.scale.x = this.camera.aspect;
-      // this.plane.scale.y = this.camera.aspect;
-    } else{
-      this.plane.scale.y = 1/this.camera.aspect;
-    }
+    this.plane.scale.x = this.camera.aspect;
+    this.plane.scale.y = 1;
 
     this.camera.updateProjectionMatrix();
 
@@ -157,7 +150,7 @@ class Sketch {
       fragmentShader: this.fragment
     });
 
-    this.geometry = new THREE.PlaneGeometry(1, 1, 1, 1);
+    this.geometry = new THREE.PlaneGeometry(1, 1, 2, 2);
 
     this.plane = new THREE.Mesh(this.geometry, this.material);
     this.scene.add(this.plane);
