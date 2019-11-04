@@ -31,7 +31,7 @@ let sketch = new Sketch({
 		  vec2 newUV = (vUv - vec2(0.5))*resolution.zw + vec2(0.5);
 		  vec4 noise = texture2D(displacement, mirrored(newUV+time*0.04));
 		  // float prog = 0.6*progress + 0.2 + noise.g * 0.06;
-		  float prog = progress*0.7 + 0.05 + noise.g * 0.06;
+		  float prog = progress*0.8 + 0.0 + noise.g * 0.06;
 		  float intpl = pow(abs(smoothstep(0., 1., (prog*2. - vUv.x + 0.5))), 10.);
 		  
 		  vec4 t1 = texture2D( texture1, (newUV - 0.5) * (1.0 - intpl) + 0.5 ) ;
