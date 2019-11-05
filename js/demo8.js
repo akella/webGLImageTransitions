@@ -1,6 +1,6 @@
 // planetary
 let sketch = new Sketch({
-	debug: true,
+	debug: false,
 	uniforms: {
 		intensity: {value: 50., type:'f', min:1., max:100}
 	},

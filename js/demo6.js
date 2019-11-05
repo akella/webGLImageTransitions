@@ -2,7 +2,7 @@
 let sketch = new Sketch({
 	debug: true,
 	uniforms: {
-		intensity: {value: 0.6, type:'f', min:0., max:3}
+		intensity: {value: 1, type:'f', min:0., max:3}
 	},
 	fragment: `
 		uniform float time;

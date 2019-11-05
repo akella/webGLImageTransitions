@@ -15,7 +15,7 @@ class Sketch {
     this.debug = opts.debug || false
     this.easing = opts.easing || 'easeInOut'
 
-    this.clicker = document.querySelector('main');
+    this.clicker = document.getElementById("content");
 
 
     this.container = document.getElementById("slider");
